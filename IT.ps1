@@ -1,7 +1,35 @@
-﻿if (-not $PSWidth)  { $PSWidth  = 80 }
-if (-not $PSHeight) { $PSHeight = 70 }
-if ($PosX -eq $null) { $PosX = 0 }
-if ($PosY -eq $null) { $PosY = 0 }
+param(
+    [int]$PSWidth = 80,
+    [int]$PSHeight = 50,
+    [int]$PosX = 0,
+    [int]$PosY = 0,
+    [bool]$SkipAdminCheck = $false
+)
+
+
+
+# ===== INIT WINAPI =====
+if (-not ("WinAPI" -as [type])) {
+
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+
+public class WinAPI {
+    [DllImport("kernel32.dll")]
+    public static extern IntPtr GetConsoleWindow();
+
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+}
+"@
+
+}
+
+# lấy handle console
+$consoleHandle = [WinAPI]::GetConsoleWindow()
+
+
 
 # 🚩 <<<--- XÁC ĐỊNH SCRIPT PATH --->>>
 
@@ -764,6 +792,20 @@ Stop-Transcript | Out-Null
 Start-Sleep 2
 
 # 🏁 <<<--- LẤY DANH SÁCH "WINDOWS SECURITY\EXCLUSION" ĐANG CÓ --->>>
+
+
+
+function Run-IT-xxx {
+    param([string]$ScriptPath)
+
+    # minimize
+    [WinAPI]::ShowWindow($consoleHandle, 6)
+
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$ScriptPath`"" -Wait
+
+    # restore
+    [WinAPI]::ShowWindow($consoleHandle, 9)
+}
 
 
 
