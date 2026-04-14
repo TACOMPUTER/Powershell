@@ -1,10 +1,7 @@
-﻿param(
-    [int]$PSWidth = 80,
-    [int]$PSHeight = 70,
-    [int]$PosX = 0,
-    [int]$PosY = 0,
-    [bool]$SkipAdminCheck = $false
-)
+﻿if (-not $PSWidth)  { $PSWidth  = 80 }
+if (-not $PSHeight) { $PSHeight = 70 }
+if ($PosX -eq $null) { $PosX = 0 }
+if ($PosY -eq $null) { $PosY = 0 }
 
 # 🚩 <<<--- XÁC ĐỊNH SCRIPT PATH --->>>
 
